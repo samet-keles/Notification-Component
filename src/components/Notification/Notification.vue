@@ -1,34 +1,37 @@
 <script setup>
 import { ref } from "vue";
+
 const props = defineProps(["type", "title", "theme"]);
 
-const show = ref(true);
+const hidden = ref(true);
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-delay(7500).then(() => (show.value = false));
+delay(7500).then(() => (hidden.value = false));
 </script>
 
 <template>
-  <div class="wrapper" :class="{ '-dark': props.theme == 'dark' }" v-if="show">
-    <div class="notification">
-      <h3 class="notification__title">{{ title }}</h3>
-      <div
-        class="notification__icon"
-        :class="{
-          '-success': props.type == 'success',
-          '-info': props.type == 'info',
-          '-warning': props.type == 'warning',
-          '-danger': props.type == 'danger',
-        }"
-      ></div>
+  <Transition name="slide-fade">
+    <div
+      class="wrapper"
+      :class="{ '-dark': props.theme == 'dark' }"
+      v-if="hidden"
+    >
+      <div class="notification">
+        <h3 class="notification__title">{{ props.title }}</h3>
+        <div class="notification__icon" :class="props.type"></div>
+      </div>
+      <button class="button" @click="hidden = !hidden">
+        <img
+          class="button__icon"
+          src="@/assets/img/icon/close.svg"
+          alt="close"
+        />
+      </button>
     </div>
-    <button class="button" @click="show = !show">
-      <img class="button__icon" src="@/assets/img/icon/close.svg" alt="close" />
-    </button>
-  </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
@@ -66,19 +69,19 @@ delay(7500).then(() => (show.value = false));
       background-repeat: no-repeat;
       background-size: 24px;
 
-      &.-success {
+      &.success {
         background-image: url("@/assets/img/icon/success.svg");
       }
 
-      &.-info {
+      &.info {
         background-image: url("@/assets/img/icon/info.svg");
       }
 
-      &.-warning {
+      &.warning {
         background-image: url("@/assets/img/icon/warning.svg");
       }
 
-      &.-danger {
+      &.danger {
         background-image: url("@/assets/img/icon/danger.svg");
       }
     }
@@ -93,6 +96,23 @@ delay(7500).then(() => (show.value = false));
 
     &__icon {
       width: 24px;
+    }
+  }
+}
+.slide-fade {
+  &-enter {
+    &-active {
+      transition: all 0.3s ease-out;
+    }
+  }
+
+  &-leave {
+    &-active {
+      transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+    }
+    &-to {
+      transform: translateX(20px);
+      opacity: 0;
     }
   }
 }
