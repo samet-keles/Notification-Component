@@ -36,9 +36,9 @@ delay(7500).then(() => (hidden.value = false));
 
 <style lang="scss" scoped>
 .wrapper {
-  position: absolute;
-  right: 50px;
-  bottom: 50px;
+  position: relative;
+  right: 30px;
+  margin-bottom: 15px;
   width: 275px;
   height: 50px;
   display: flex;
